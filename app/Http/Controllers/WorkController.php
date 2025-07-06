@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Work;
 use Illuminate\Http\Request;
 
+use function Symfony\Component\String\b;
+
 class WorkController extends Controller
 {
     /**
@@ -12,11 +14,8 @@ class WorkController extends Controller
      */
     public function index()
     {
-        $works = Work::with('employee')->get();
-        return response()->json([
-            'success' => true,
-            'data' => $works,
-        ]);
+       return Work::with('employee')->get();
+
     }
 
     /**
@@ -24,20 +23,16 @@ class WorkController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'required|in:جديدة,تحت التنفيذ,معلقة,مكتملة',
-            'employee_id' => 'required|exists:employees,id',
-        ]);
-
-        $work = Work::create($validated);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Work created successfully.',
-            'data' => $work,
-        ], 201);
+         return response()->json(
+        Work::create(
+            $request->validate([
+                'title'       => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'status'      => 'required|in:جديدة,تحت التنفيذ,معلقة,مكتملة',
+                'employee_id' => 'required|exists:employees,id',
+            ])
+        ), 201
+    );
     }
 
     /**
@@ -45,19 +40,9 @@ class WorkController extends Controller
      */
     public function show(string $id)
     {
-        $work = Work::with('employee')->find($id);
+          return Work::with('employee')->findOrFail($id);
 
-        if (!$work) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Work not found.',
-            ], 404);
-        }
 
-        return response()->json([
-            'success' => true,
-            'data' => $work,
-        ]);
     }
 
     /**
@@ -65,29 +50,17 @@ class WorkController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $work = Work::find($id);
+        $work = Work::findOrFail($id);
 
-        if (!$work) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Work not found.',
-            ], 404);
-        }
+    $work->update($request->validate([
+        'title'       => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'status'      => 'required|in:جديدة,تحت التنفيذ,معلقة,مكتملة',
+        'employee_id' => 'required|exists:employees,id',
+    ]));
 
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'required|in:جديدة,تحت التنفيذ,معلقة,مكتملة',
-            'employee_id' => 'required|exists:employees,id',
-        ]);
+    return response()->json($work);
 
-        $work->update($validated);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Work updated successfully.',
-            'data' => $work,
-        ]);
     }
 
     /**
@@ -95,20 +68,7 @@ class WorkController extends Controller
      */
     public function destroy(string $id)
     {
-        $work = Work::find($id);
-
-        if (!$work) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Work not found.',
-            ], 404);
-        }
-
-        $work->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Work deleted successfully.',
-        ]);
+       Work::findOrFail($id)->delete();
+    return response()->noContent();
     }
 }
