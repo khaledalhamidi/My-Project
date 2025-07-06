@@ -14,9 +14,16 @@ class work extends Model
         'status',
         'employee_id',
     ];
-
+    //Many to One Work with employee
     public function employee()
     {
         return $this->belongsTo(Employee::class);
     }
+
+    // Many To Many Depart And Work
+     public function Departments()
+    {
+        return $this->hasMany(Department::class,'department_work');
+    }
+
 }

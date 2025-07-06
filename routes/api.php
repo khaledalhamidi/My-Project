@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\WorkController;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +16,7 @@ Route::get('/user', function (Request $request) {
 Route::apiResource('posts', PostController::class);
 Route::apiResource('works', WorkController::class);
 Route::apiResource('employee', EmployeeController::class);
+Route::apiResource('Departments', DepartmentController::class);
 
 
 // // عرض كل المنشورات (GET /api/posts)

@@ -1,6 +1,8 @@
 <?php
 
 namespace Database\Seeders;
+
+use App\Models\Department;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -10,19 +12,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([
-        //     //PostSeeder::class,
-        //    // CustomerSeeder::class,
-        //     EmployeeSeeder::class,   // ✅ Add this if you created it
-        //     WorkSeeder::class,       // ✅ Add this if you created it
-        // ]);
+
 
 
         $this->call([
-        // PostSeeder::class,
-        // CustomerSeeder::class,
+        PostSeeder::class,
+
         EmployeeSeeder::class,
         WorkSeeder::class,
+        DepartmentSeeder::class,
+       DepartmentWorkSeeder::class,
+
     ]);
     }
 }
