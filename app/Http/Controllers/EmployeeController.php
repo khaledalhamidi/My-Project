@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use App\Models\work;
 
 class EmployeeController extends Controller
 {
@@ -70,4 +71,25 @@ class EmployeeController extends Controller
 
         return response()->json(null, 204);
     }
+
+//updated tasks
+   public function updateTaskStatus(Request $request, $employeeId, $taskId)
+{
+    $request->validate([
+        'status' => 'required|in:جديدة,تحت التنفيذ,معلقة,مكتملة',
+    ]);
+
+    // تأكد أن التاسك فعلاً مخصص لهذا الموظف
+    $task = Work::where('id', $taskId)
+                ->where('employee_id', $employeeId)
+                ->firstOrFail();
+
+    $task->status = $request->status;
+    $task->save();
+
+    return response()->json([
+        'message' => 'تم تحديث حالة المهمة بنجاح.',
+        'task' => $task
+    ]);
+}
 }

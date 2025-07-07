@@ -25,5 +25,14 @@ class work extends Model
     {
         return $this->hasMany(Department::class,'department_work');
     }
+    public function creator()
+{
+    return $this->belongsTo(Employee::class, 'created_by');
+}
+
+public function assignedEmployees()
+{
+    return $this->belongsToMany(Employee::class)->withPivot('status')->withTimestamps();
+}
 
 }

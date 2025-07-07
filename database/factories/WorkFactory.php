@@ -19,9 +19,10 @@ class WorkFactory extends Factory
     {
        return [
             'title' => $this->faker->sentence(3),
-            'description' => $this->faker->paragraph,
-            'status' => $this->faker->randomElement(['جديدة', 'تحت التنفيذ', 'معلقة', 'مكتملة']),
-            'employee_id' => Employee::inRandomOrder()->first()?->id ?? Employee::factory(),
+        'description' => $this->faker->paragraph,
+         'employee_id' => \App\Models\Employee::inRandomOrder()->first()->id ?? \App\Models\Employee::factory(),
+        'status' => $this->faker->randomElement(['جديدة', 'تحت التنفيذ', 'معلقة', 'مكتملة']),
+        'created_by' => Employee::inRandomOrder()->first()?->id ?? Employee::factory(),
         ];
     }
 }

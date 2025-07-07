@@ -17,6 +17,9 @@ Route::apiResource('posts', PostController::class);
 Route::apiResource('works', WorkController::class);
 Route::apiResource('employee', EmployeeController::class);
 Route::apiResource('Departments', DepartmentController::class);
+Route::apiResource('Employee', EmployeeController::class);
+// for updating employee task in employee table
+Route::put('/employee/{employee}/task/{task}/status', [EmployeeController::class, 'updateTaskStatus']);
 
 
 // // عرض كل المنشورات (GET /api/posts)

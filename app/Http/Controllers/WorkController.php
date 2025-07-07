@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
 use App\Models\Work;
 use Illuminate\Http\Request;
 
@@ -23,16 +23,28 @@ class WorkController extends Controller
      */
     public function store(Request $request)
     {
-         return response()->json(
-        Work::create(
-            $request->validate([
-                'title'       => 'required|string|max:255',
-                'description' => 'nullable|string',
-                'status'      => 'required|in:جديدة,تحت التنفيذ,معلقة,مكتملة',
-                'employee_id' => 'required|exists:employees,id',
-            ])
-        ), 201
-    );
+
+
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'status' => 'required|in:جديدة,تحت التنفيذ,معلقة,مكتملة',
+        'assigned_to' => 'required|array',
+        'assigned_to.*' => 'exists:employees,id',
+    ]);
+
+    $work = Work::create([
+    'title' => $validated['title'],
+    'description' => $validated['description'],
+    'status' => $validated['status'],
+    'created_by' => Auth::id() ?? 1,
+]);
+
+    foreach ($validated['assigned_to'] as $employee_id) {
+        $work->assignedEmployees()->attach($employee_id, ['status' => 'جديدة']);
+    }
+
+    return response()->json($work, 201);
     }
 
     /**
