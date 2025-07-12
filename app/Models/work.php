@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class work extends Model
 {
     //
-  use HasFactory;
+    use HasFactory;
     protected $fillable = [
         'title',
         'description',
@@ -21,18 +22,17 @@ class work extends Model
     }
 
     // Many To Many Depart And Work
-     public function Departments()
+    public function Departments()
     {
-        return $this->hasMany(Department::class,'department_work');
+        return $this->hasMany(Department::class, 'department_work');
     }
     public function creator()
-{
-    return $this->belongsTo(Employee::class, 'created_by');
-}
+    {
+        return $this->belongsTo(Employee::class, 'created_by');
+    }
 
-public function assignedEmployees()
-{
-    return $this->belongsToMany(Employee::class)->withPivot('status')->withTimestamps();
-}
-
+    public function assignedEmployees()
+    {
+        return $this->belongsToMany(Employee::class)->withPivot('status')->withTimestamps();
+    }
 }

@@ -17,12 +17,12 @@ class WorkFactory extends Factory
      */
     public function definition(): array
     {
-       return [
+        return [
             'title' => $this->faker->sentence(3),
-        'description' => $this->faker->paragraph,
-         'employee_id' => \App\Models\Employee::inRandomOrder()->first()->id ?? \App\Models\Employee::factory(),
-        'status' => $this->faker->randomElement(['جديدة', 'تحت التنفيذ', 'معلقة', 'مكتملة']),
-        'created_by' => Employee::inRandomOrder()->first()?->id ?? Employee::factory(),
+            'description' => $this->faker->paragraph,
+            'employee_id' => \App\Models\Employee::inRandomOrder()->first()->id ?? \App\Models\Employee::factory(),
+            'status' => $this->faker->randomElement(['new', 'in_progress', 'pending', 'completed']),
+            'created_by' => Employee::inRandomOrder()->first()?->id ?? Employee::factory(),
         ];
     }
 }

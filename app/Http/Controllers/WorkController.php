@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Http\Requests\StoreWorkRequest;
+use App\Http\Resources\WorkResource;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Work;
 use Illuminate\Http\Request;
@@ -14,37 +17,27 @@ class WorkController extends Controller
      */
     public function index()
     {
-       return Work::with('employee')->get();
-
+        return Work::with('employee')->get();
     }
 
     /**
      * إنشاء عمل جديد (JSON)
      */
-    public function store(Request $request)
+    public function store(StoreWorkRequest $request)
     {
+        $work = Work::create([
 
+            'title' => $request->title,
+            'description' => $request->description,
+            'status' => $request->status,
+            'created_by' => Auth::id(),
+        ]);
 
-    $validated = $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'status' => 'required|in:جديدة,تحت التنفيذ,معلقة,مكتملة',
-        'assigned_to' => 'required|array',
-        'assigned_to.*' => 'exists:employees,id',
-    ]);
+        foreach ($request['assigned_to'] as $employee_id) {
+            $work->assignedEmployees()->attach($employee_id, ['status' => 'new']);
+        }
 
-    $work = Work::create([
-    'title' => $validated['title'],
-    'description' => $validated['description'],
-    'status' => $validated['status'],
-    'created_by' => Auth::id() ?? 1,
-]);
-
-    foreach ($validated['assigned_to'] as $employee_id) {
-        $work->assignedEmployees()->attach($employee_id, ['status' => 'جديدة']);
-    }
-
-    return response()->json($work, 201);
+        return new  WorkResource($work, 201);
     }
 
     /**
@@ -52,27 +45,24 @@ class WorkController extends Controller
      */
     public function show(string $id)
     {
-          return Work::with('employee')->findOrFail($id);
-
-
+        return Work::with('employee')->findOrFail($id);
     }
 
     /**
      * تحديث عمل معين (JSON)
      */
-    public function update(Request $request, string $id)
+    public function update(StoreWorkRequest $request, string $id)
     {
         $work = Work::findOrFail($id);
 
-    $work->update($request->validate([
-        'title'       => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'status'      => 'required|in:جديدة,تحت التنفيذ,معلقة,مكتملة',
-        'employee_id' => 'required|exists:employees,id',
-    ]));
+        $work->update([
+            'title'    => $request->tittle,
+            'description' => $request->description,
+            'status'      => $request->status,
+            'employee_id' =>$request->employee_id,
+        ]);
 
-    return response()->json($work);
-
+        return new  WorkResource($work);
     }
 
     /**
@@ -80,7 +70,7 @@ class WorkController extends Controller
      */
     public function destroy(string $id)
     {
-       Work::findOrFail($id)->delete();
-    return response()->noContent();
+        Work::findOrFail($id)->delete();
+        return response()->noContent();
     }
 }

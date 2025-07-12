@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,13 +14,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('works', function (Blueprint $table) {
-         $table->id();
-        $table->string('title');
-        $table->text('description')->nullable();
-        $table->enum('status', ['جديدة', 'تحت التنفيذ', 'معلقة', 'مكتملة'])->default('جديدة');
-        $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
-        $table->foreignId('created_by')->constrained('employees')->onDelete('cascade'); // هذا السطر الجديد
-        $table->timestamps();
+            $table->id();
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->enum('status', ['new', 'in_progress', 'pending', 'completed'])->default('new');
+            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
+            $table->foreignId('created_by')->constrained('employees')->onDelete('cascade'); // هذا السطر الجديد
+            $table->timestamps();
         });
     }
 
