@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Translatable\HasTranslations;
 
 class work extends Model
 {
     //
+    use HasTranslations;
     use HasFactory;
     protected $fillable = [
         'title',
@@ -15,6 +17,8 @@ class work extends Model
         'status',
         'employee_id',
     ];
+    public array  $translatable = ['title', 'description'];
+
     //Many to One Work with employee
     public function employee()
     {

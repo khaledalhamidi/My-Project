@@ -7,6 +7,7 @@ use App\Http\Resources\WorkResource;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Work;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 use function Symfony\Component\String\b;
 
@@ -38,6 +39,7 @@ class WorkController extends Controller
         }
 
         return new  WorkResource($work, 201);
+
     }
 
     /**
@@ -45,7 +47,19 @@ class WorkController extends Controller
      */
     public function show(string $id)
     {
-        return Work::with('employee')->findOrFail($id);
+        // return Work::with('employee')->findOrFail($id);
+        $work = Work::with('employee')->findOrFail($id);
+
+        return response()->json([
+            'id' => $work->id,
+
+            // label => value
+            'title' => $work->getTranslation('title', App::getLocale()),
+            'description' => $work->getTranslation('description', App::getLocale()),
+
+            'status' => $work->status,
+            'employee' => $work->employee,
+        ]);
     }
 
     /**
@@ -53,16 +67,25 @@ class WorkController extends Controller
      */
     public function update(StoreWorkRequest $request, string $id)
     {
+        // $work = Work::findOrFail($id);
+
+        // $work->update([
+        //     'title'    => $request->tittle,
+        //     'description' => $request->description,
+        //     'status'      => $request->status,
+        //     'employee_id' => $request->employee_id,
+        // ]);
+
+        // return new  WorkResource($work);
         $work = Work::findOrFail($id);
 
-        $work->update([
-            'title'    => $request->tittle,
-            'description' => $request->description,
-            'status'      => $request->status,
-            'employee_id' =>$request->employee_id,
-        ]);
+        $work->setTranslations('title', $request->title);
+        $work->setTranslations('description', $request->description);
+        $work->status = $request->status;
+        $work->employee_id = $request->employee_id;
+        $work->save();
 
-        return new  WorkResource($work);
+        return new WorkResource($work);
     }
 
     /**

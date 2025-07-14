@@ -17,7 +17,14 @@ Route::get('/user', function (Request $request) {
 //to create all rout in once
 
 Route::apiResource('posts', PostController::class);
-Route::apiResource('works', WorkController::class);
+//Route::apiResource('works', WorkController::class);
+
+//middleware with workcontroller
+Route::middleware('setlocale')->group(function () {
+    Route::apiResource('works', WorkController::class);
+});
+
+
 Route::apiResource('employee', EmployeeController::class);
 Route::apiResource('departments', DepartmentController::class);
 Route::apiResource('employee', EmployeeController::class);
@@ -30,6 +37,10 @@ Route::get('test', function () {
     return  DB::table('course_student')->select('student_id')->get();
 });
 
+
+// middleware route
+// Route::get('employee-role', [EmployeeController::class, 'getAllEmplyeeTasks'])
+//     ->middleware('CheckEmployee:manager');
 // // عرض كل المنشورات (GET /api/posts)
 // Route::get('posts', [PostController::class, 'index']);
 

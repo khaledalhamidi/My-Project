@@ -11,7 +11,7 @@ class StoreWorkRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,14 +21,26 @@ class StoreWorkRequest extends FormRequest
      */
     public function rules(): array
     {
+       return [
+            'title' => 'required|array',
+            'title.en' => 'required|string',
+            'description' => 'required|array',
+            'description.en' => 'required|string',
+            'status' => 'required|string',
+            'assigned_to' => 'nullable|array',
+            'assigned_to.*' => 'integer|exists:employees,id',
+            'employee_id' => 'nullable|integer|exists:employees,id',
+        ];
+    }
+    public function attributes()
+    {
         return [
-
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'required|in:new, pending,in_progress,completed',
-            'assigned_to' => 'required|array',
-            'assigned_to.*' => 'exists:employees,id',
-
+            'title.ar' => __('اختبار  بالعربية'),
+            'title.en' => __(' English test'),
+            'description.ar' => __('اختبار بالعربية'),
+            'description.en' => __('english test '),
+            'status' => __('new'),
+            'assigned_to' => __(' الموضف'),
         ];
     }
 }

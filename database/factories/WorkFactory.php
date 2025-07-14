@@ -17,10 +17,20 @@ class WorkFactory extends Factory
      */
     public function definition(): array
     {
+        $arabicFaker = \Faker\Factory::create('ar_SA');
+
         return [
-            'title' => $this->faker->sentence(3),
-            'description' => $this->faker->paragraph,
-            'employee_id' => \App\Models\Employee::inRandomOrder()->first()->id ?? \App\Models\Employee::factory(),
+
+            'title' => [
+                'en' => $this->faker->sentence(3),
+                'ar' => $arabicFaker->sentence(3),
+            ],
+            'description' => [
+                'en' => $this->faker->paragraph(),
+                'ar' => $arabicFaker->paragraph(),
+            ],
+
+
             'status' => $this->faker->randomElement(['new', 'in_progress', 'pending', 'completed']),
             'created_by' => Employee::inRandomOrder()->first()?->id ?? Employee::factory(),
         ];

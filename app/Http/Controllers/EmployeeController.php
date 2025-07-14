@@ -11,7 +11,17 @@ use App\Models\work;
 
 class EmployeeController extends Controller
 {
+
+public function getAllEmplyeeTasks()
+    {
+        $employees = Employee::with('works')->get();
+        return response()->json($employees);
+        $token = $employee->createToken('api-token')->plainTextToken;
+    }
+
+
     // Display a listing of employees with their works
+
     public function index()
     {
         $employees = Employee::with('works')->get();
