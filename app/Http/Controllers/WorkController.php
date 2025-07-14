@@ -6,6 +6,8 @@ use App\Http\Requests\StoreWorkRequest;
 use App\Http\Resources\WorkResource;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Work;
+use Dotenv\Parser\Value;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 
@@ -13,6 +15,7 @@ use function Symfony\Component\String\b;
 
 class WorkController extends Controller
 {
+
     /**
      * عرض جميع الأعمال مع الموظف المرتبط (JSON)
      */
@@ -26,20 +29,27 @@ class WorkController extends Controller
      */
     public function store(StoreWorkRequest $request)
     {
-        $work = Work::create([
+        // $work = Work::create([
 
-            'title' => $request->title,
-            'description' => $request->description,
+        //     'title' => $request->title,
+        //     'description' => $request->description,
+        //     'status' => $request->status,
+        //     'created_by' => Auth::id(),
+        // ]);
+        $work = Work::create([
+            'title' => [
+                'en' => $request->title_en,
+                'ar' => $request->title_ar,
+            ],
+            'description' => [
+                'en' => $request->description_en,
+                'ar' => $request->description_ar,
+            ],
             'status' => $request->status,
-            'created_by' => Auth::id(),
         ]);
 
-        foreach ($request['assigned_to'] as $employee_id) {
-            $work->assignedEmployees()->attach($employee_id, ['status' => 'new']);
-        }
 
         return new  WorkResource($work, 201);
-
     }
 
     /**
@@ -52,13 +62,9 @@ class WorkController extends Controller
 
         return response()->json([
             'id' => $work->id,
-
-            // label => value
-            'title' => $work->getTranslation('title', App::getLocale()),
-            'description' => $work->getTranslation('description', App::getLocale()),
-
+            'title' => $work->title, // Auto-language using accessor
+            'description' => $work->description,
             'status' => $work->status,
-            'employee' => $work->employee,
         ]);
     }
 

@@ -2,22 +2,58 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 use Spatie\Translatable\HasTranslations;
 
 class work extends Model
 {
     //
-    use HasTranslations;
+    // use HasTranslations;
     use HasFactory;
     protected $fillable = [
         'title',
         'description',
         'status',
         'employee_id',
+        'created_by',
     ];
-    public array  $translatable = ['title', 'description'];
+
+    protected $casts = [
+        'title' => 'array',
+        'description' => 'array',
+    ];
+
+
+
+    public function title(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => is_array($value) ? ($value[App::getLocale()] ?? $value['en'] ?? null)
+                : (json_decode($value, true)[App::getLocale()] ?? json_decode($value, true)['en'] ?? null)
+        );
+    }
+
+    public function description(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) =>
+            is_array($value)
+                ? ($value[App::getLocale()] ?? $value['en'] ?? null)
+                : (json_decode($value, true)[App::getLocale()] ?? json_decode($value, true)['en'] ?? null)
+        );
+    }
+
+    public function status(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => strtoupper($value)
+        );
+    }
+
+
 
     //Many to One Work with employee
     public function employee()
@@ -33,10 +69,5 @@ class work extends Model
     public function creator()
     {
         return $this->belongsTo(Employee::class, 'created_by');
-    }
-
-    public function assignedEmployees()
-    {
-        return $this->belongsToMany(Employee::class)->withPivot('status')->withTimestamps();
     }
 }

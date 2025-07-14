@@ -10,17 +10,13 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class WorkFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+   public function definition(): array
     {
         $arabicFaker = \Faker\Factory::create('ar_SA');
 
-        return [
+        $employeeId = Employee::inRandomOrder()->value('id') ?? Employee::factory()->create()->id;
 
+        return [
             'title' => [
                 'en' => $this->faker->sentence(3),
                 'ar' => $arabicFaker->sentence(3),
@@ -29,10 +25,9 @@ class WorkFactory extends Factory
                 'en' => $this->faker->paragraph(),
                 'ar' => $arabicFaker->paragraph(),
             ],
-
-
             'status' => $this->faker->randomElement(['new', 'in_progress', 'pending', 'completed']),
-            'created_by' => Employee::inRandomOrder()->first()?->id ?? Employee::factory(),
+            'employee_id' => $employeeId,
+            'created_by' => $employeeId,
         ];
     }
 }
