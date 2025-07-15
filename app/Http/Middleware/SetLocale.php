@@ -15,17 +15,19 @@ class SetLocale
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
-    { {
-            $locale = $request->header('X-Locale');
 
-            // لو ما وجدنا اللغة نستخدم الإنكليزي كافتراضي
-            if (!in_array($locale, ['en', 'ar'])) {
-                $locale = 'en';
-            }
+    {
+        $locale = $request->header('lang', config('app.locale'));
 
-            App::setLocale($locale);
 
-            return $next($request);
+        $allowed = ['en', 'ar'];
+
+        if (!in_array($locale, $allowed)) {
+            $locale = config('app.locale');
         }
+
+        App::setLocale($locale);
+
+        return $next($request);
     }
 }

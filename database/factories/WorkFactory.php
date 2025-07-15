@@ -17,6 +17,10 @@ class WorkFactory extends Factory
         $employeeId = Employee::inRandomOrder()->value('id') ?? Employee::factory()->create()->id;
 
         return [
+            'title' => $this->faker->sentence(3),
+            'description' => $this->faker->paragraph,
+            // 'employee_id' => \App\Models\Employee::inRandomOrder()->first()->id ?? \App\Models\Employee::factory(),
+
             'title' => [
                 'en' => $this->faker->sentence(3),
                 'ar' => $arabicFaker->sentence(3),
@@ -25,9 +29,10 @@ class WorkFactory extends Factory
                 'en' => $this->faker->paragraph(),
                 'ar' => $arabicFaker->paragraph(),
             ],
+
+
             'status' => $this->faker->randomElement(['new', 'in_progress', 'pending', 'completed']),
-            'employee_id' => $employeeId,
-            'created_by' => $employeeId,
+            'created_by' => Employee::inRandomOrder()->first()?->id ?? Employee::factory(),
         ];
     }
 }

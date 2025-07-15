@@ -21,17 +21,17 @@ class WorkResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'title' => $this->getTranslation('title', $locale),
-            'description' => $this->getTranslation('description', $locale),
+            'title' => $this->title,
+            'description' => $this->description,
             'status' => $this->status,
             'employee' => $this->whenLoaded('employee'),
-            'assigned_employees' => $this->assignedEmployees()->get()->map(function ($employee) {
-                return [
-                    'id' => $employee->id,
-                    'name' => $employee->name,
-                    'pivot_status' => $employee->pivot->status,
-                ];
-            }),
+            // 'assigned_employees' => $this->assignedEmployees()->get()->map(function ($employee) {
+            //     return [
+            //         'id' => $employee->id,
+            //         'name' => $employee->name,
+            //         'pivot_status' => $employee->pivot->status,
+            //     ];
+            // }),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

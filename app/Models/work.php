@@ -30,20 +30,22 @@ class work extends Model
 
     public function title(): Attribute
     {
-        return Attribute::make(
-            get: fn($value) => is_array($value) ? ($value[App::getLocale()] ?? $value['en'] ?? null)
-                : (json_decode($value, true)[App::getLocale()] ?? json_decode($value, true)['en'] ?? null)
-        );
+        // return Attribute::make(
+        //     get: fn($value) => is_array($value) ? ($value[App::getLocale()] ?? $value['en'] ?? null)
+        //         : (json_decode($value, true)[App::getLocale()] ?? json_decode($value, true)['en'] ?? null)
+        // );
+        return Attribute::make(fn($value) => json_decode($value, true)[App::getLocale()] ?? '');
     }
 
     public function description(): Attribute
     {
-        return Attribute::make(
-            get: fn($value) =>
-            is_array($value)
-                ? ($value[App::getLocale()] ?? $value['en'] ?? null)
-                : (json_decode($value, true)[App::getLocale()] ?? json_decode($value, true)['en'] ?? null)
-        );
+        // return Attribute::make(
+        //     get: fn($value) =>
+        //     is_array($value)
+        //         ? ($value[App::getLocale()] ?? $value['en'] ?? null)
+        //         : (json_decode($value, true)[App::getLocale()] ?? json_decode($value, true)['en'] ?? null)
+        // );
+        return Attribute::make(fn($value)=>json_decode($value,true)[App::getLocale()]??'');
     }
 
     public function status(): Attribute

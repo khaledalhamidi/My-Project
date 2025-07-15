@@ -29,7 +29,10 @@ class WorkController extends Controller
      */
     public function store(StoreWorkRequest $request)
     {
-        // $work = Work::create([
+        //    return [
+        //         'body'=>Auth::id(),
+        //     ];
+        //     // $ work = Work::create([
 
         //     'title' => $request->title,
         //     'description' => $request->description,
@@ -37,14 +40,19 @@ class WorkController extends Controller
         //     'created_by' => Auth::id(),
         // ]);
         $work = Work::create([
-            'title' => [
-                'en' => $request->title_en,
-                'ar' => $request->title_ar,
-            ],
-            'description' => [
-                'en' => $request->description_en,
-                'ar' => $request->description_ar,
-            ],
+           // 'created_by' => Auth::id(),
+           'created_by'=>1,
+            'title' => $request->title,
+            'description' => $request->description,
+            // 'title' => [
+
+            // 'en' => $request->title,
+            // 'ar' => $request->title_ar,
+            // ],
+            // 'description' => [
+            //     'en' => $request->description_en,
+            //     'ar' => $request->description_ar,
+            // ],
             'status' => $request->status,
         ]);
 
@@ -73,16 +81,7 @@ class WorkController extends Controller
      */
     public function update(StoreWorkRequest $request, string $id)
     {
-        // $work = Work::findOrFail($id);
 
-        // $work->update([
-        //     'title'    => $request->tittle,
-        //     'description' => $request->description,
-        //     'status'      => $request->status,
-        //     'employee_id' => $request->employee_id,
-        // ]);
-
-        // return new  WorkResource($work);
         $work = Work::findOrFail($id);
 
         $work->setTranslations('title', $request->title);
