@@ -5,6 +5,7 @@ use App\Http\Controllers\StudentCourseController;
 
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkController;
 use App\Models\Department;
 use Illuminate\Http\Request;
@@ -23,8 +24,11 @@ Route::apiResource('posts', PostController::class);
 Route::middleware('setlocale')->group(function () {
     Route::apiResource('works', WorkController::class);
 });
+Route::post('registration', [UserController::class, 'registration']);
+Route::post('login', [UserController::class, 'login']);
+Route::post('logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 
-
+Route::apiResource('users',UserController::class);
 Route::apiResource('employee', EmployeeController::class);
 Route::apiResource('departments', DepartmentController::class);
 Route::apiResource('employee', EmployeeController::class);
@@ -37,22 +41,3 @@ Route::get('test', function () {
     return  DB::table('course_student')->select('student_id')->get();
 });
 
-
-// middleware route
-// Route::get('employee-role', [EmployeeController::class, 'getAllEmplyeeTasks'])
-//     ->middleware('CheckEmployee:manager');
-// // عرض كل المنشورات (GET /api/posts)
-// Route::get('posts', [PostController::class, 'index']);
-
-// // إنشاء منشور جديد (POST /api/posts)
-// Route::post('posts', [PostController::class, 'store']);
-
-// // عرض منشور معين (GET /api/posts/{id})
-// Route::get('posts/{id}', [PostController::class, 'show']);
-
-// // تحديث منشور معين (PUT/PATCH /api/posts/{id})
-// Route::put('posts/{id}', [PostController::class, 'update']);
-// Route::patch('posts/{id}', [PostController::class, 'update']);
-
-// // حذف منشور معين (DELETE /api/posts/{id})
-// Route::delete('posts/{id}', [PostController::class, 'destroy']);
