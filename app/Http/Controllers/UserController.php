@@ -60,6 +60,6 @@ class UserController extends Controller
         return response()->json([
             'message' => " logout successfully ",
 
-        ],401);
+        ], 401);
     }
 }

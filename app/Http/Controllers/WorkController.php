@@ -10,7 +10,6 @@ use Dotenv\Parser\Value;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-
 use function Symfony\Component\String\b;
 
 class WorkController extends Controller
@@ -29,40 +28,15 @@ class WorkController extends Controller
      */
     public function store(StoreWorkRequest $request)
     {
-        //    return [
-        //         'body'=>Auth::id(),
-        //     ];
-        //     // $ work = Work::create([
-
-        //     'title' => $request->title,
-        //     'description' => $request->description,
-        //     'status' => $request->status,
-        //     'created_by' => Auth::id(),
-        // ]);
         $work = Work::create([
-           // 'created_by' => Auth::id(),
-           'created_by'=>1,
+            // 'created_by' => Auth::id(),
+            'created_by' => 1,
             'title' => $request->title,
             'description' => $request->description,
-            // 'title' => [
-
-            // 'en' => $request->title,
-            // 'ar' => $request->title_ar,
-            // ],
-            // 'description' => [
-            //     'en' => $request->description_en,
-            //     'ar' => $request->description_ar,
-            // ],
             'status' => $request->status,
         ]);
-
-
         return new  WorkResource($work, 201);
     }
-
-    /**
-     * عرض عمل معين (JSON)
-     */
     public function show(string $id)
     {
         // return Work::with('employee')->findOrFail($id);
@@ -75,17 +49,13 @@ class WorkController extends Controller
             'status' => $work->status,
         ]);
     }
-
-    /**
-     * تحديث عمل معين (JSON)
-     */
     public function update(StoreWorkRequest $request, string $id)
     {
 
         $work = Work::findOrFail($id);
 
-        $work->setTranslations('title', $request->title);
-        $work->setTranslations('description', $request->description);
+        $work->title = $request->title;
+        $work->description = $request->description;
         $work->status = $request->status;
         $work->employee_id = $request->employee_id;
         $work->save();
