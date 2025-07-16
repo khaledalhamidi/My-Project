@@ -40,8 +40,8 @@ class WorkController extends Controller
         //     'created_by' => Auth::id(),
         // ]);
         $work = Work::create([
-           // 'created_by' => Auth::id(),
-           'created_by'=>1,
+            // 'created_by' => Auth::id(),
+            'created_by' => 1,
             'title' => $request->title,
             'description' => $request->description,
             // 'title' => [

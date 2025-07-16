@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,13 +13,13 @@ use function Laravel\Prompts\password;
 class UserController extends Controller
 {
     //
-    public function registration(Request $request)
+    public function registration(RegisterUserRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:200',
-            'email' => 'required|string|email|unique:users,email|max:200',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+        // $request->validate([
+        //     'name' => 'required|string|max:200',
+        //     'email' => 'required|string|email|unique:users,email|max:200',
+        //     'password' => 'required|string|min:8|confirmed',
+        // ]);
 
         $user = User::create([
             'name' => $request->name,
@@ -58,8 +59,8 @@ class UserController extends Controller
     {
         $request->user()->currentAccessToken()->delete();
         return response()->json([
-            'message' => " logout successfully ",
+            'message' => " logout successfully  ",
 
-        ],401);
+        ], 401);
     }
 }

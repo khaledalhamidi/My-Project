@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\StudentCourseController;
-
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
@@ -22,13 +21,13 @@ Route::apiResource('posts', PostController::class);
 
 //middleware with workcontroller
 Route::middleware('setlocale')->group(function () {
-    Route::apiResource('works', WorkController::class);
+    Route::apiResource('works', WorkController::class)->middleware('auth:sanctum');
 });
 Route::post('registration', [UserController::class, 'registration']);
 Route::post('login', [UserController::class, 'login']);
 Route::post('logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::apiResource('users',UserController::class);
+Route::apiResource('users', UserController::class);
 Route::apiResource('employee', EmployeeController::class);
 Route::apiResource('departments', DepartmentController::class);
 Route::apiResource('employee', EmployeeController::class);
@@ -40,4 +39,3 @@ Route::put('/employee/{employee}/task/{task}/status', [EmployeeController::class
 Route::get('test', function () {
     return  DB::table('course_student')->select('student_id')->get();
 });
-
