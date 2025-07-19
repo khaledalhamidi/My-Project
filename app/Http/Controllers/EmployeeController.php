@@ -12,7 +12,7 @@ use App\Models\work;
 class EmployeeController extends Controller
 {
 
-public function getAllEmplyeeTasks()
+    public function getAllEmplyeeTasks()
     {
         $employees = Employee::with('works')->get();
         return response()->json($employees);
@@ -78,14 +78,11 @@ public function getAllEmplyeeTasks()
             'status' => 'required|in:جديدة,تحت التنفيذ,معلقة,مكتملة',
         ]);
 
-        // تأكد أن التاسك فعلاً مخصص لهذا الموظف
         $task = Work::where('id', $taskId)
             ->where('employee_id', $employeeId)
             ->firstOrFail();
-
         $task->status = $request->status;
         $task->save();
-
         return response()->json([
             'message' => 'تم تحديث حالة المهمة بنجاح.',
             'task' => $task

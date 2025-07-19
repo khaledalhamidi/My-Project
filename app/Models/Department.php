@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Department extends Model
 {
     //
-    use HasFactory; // ✅ هذه السطر مهم جداً
+    use HasFactory;
 
     protected $fillable = ['name', 'location'];
 

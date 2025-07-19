@@ -6,7 +6,6 @@ use App\Http\Requests\StoreDepartmentRequest;
 use App\Http\Requests\UpdateDepartmentRequest;
 use App\Http\Resources\DepartmentResource;
 use App\Models\Department;
-use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
@@ -15,7 +14,6 @@ class DepartmentController extends Controller
         return response()->json(Department::with('works')->get());
     }
 
-    // إنشاء قسم جديد
     public function store(StoreDepartmentRequest $request)
     {
         $department = Department::create(
@@ -28,14 +26,12 @@ class DepartmentController extends Controller
         return new DepartmentResource($department, 201);
     }
 
-    // عرض قسم محدد مع أعماله
     public function show($id)
     {
         $department = Department::with('works')->findOrFail($id);
         return new DepartmentResource($department);
     }
 
-    // تعديل قسم
     public function update(UpdateDepartmentRequest $request, $id)
     {
         $department = Department::findOrFail($id);
@@ -51,13 +47,11 @@ class DepartmentController extends Controller
         return new DepartmentResource($department);
     }
 
-    // حذف قسم
     public function destroy($id)
     {
         $department = Department::findOrFail($id);
         $department->delete();
 
-      return response(null, 204);
- // لا يُرجع شيء
+        return response(null, 204);
     }
 }
