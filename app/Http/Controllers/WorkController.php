@@ -41,7 +41,6 @@ class WorkController extends Controller
     public function update(StoreWorkRequest $request, string $id)
     {
         $work = Work::findOrFail($id);
-
         $work->update([
             'title'        => $request->title,
             'description'  => $request->description,
@@ -51,7 +50,6 @@ class WorkController extends Controller
 
         return new WorkResource($work);
     }
-
     public function destroy(string $id)
     {
         Work::findOrFail($id)->delete();

@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
 
 
         $this->call([
-
+          // RandomWorkSeeder::class,
             EmployeeSeeder::class,
             WorkSeeder::class,
             DepartmentSeeder::class,

@@ -10,17 +10,13 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class WorkFactory extends Factory
 {
-   public function definition(): array
+    public function definition(): array
     {
         $arabicFaker = \Faker\Factory::create('ar_SA');
 
         $employeeId = Employee::inRandomOrder()->value('id') ?? Employee::factory()->create()->id;
 
         return [
-            'title' => $this->faker->sentence(3),
-            'description' => $this->faker->paragraph,
-            // 'employee_id' => \App\Models\Employee::inRandomOrder()->first()->id ?? \App\Models\Employee::factory(),
-
             'title' => [
                 'en' => $this->faker->sentence(3),
                 'ar' => $arabicFaker->sentence(3),
@@ -29,10 +25,11 @@ class WorkFactory extends Factory
                 'en' => $this->faker->paragraph(),
                 'ar' => $arabicFaker->paragraph(),
             ],
-
-
             'status' => $this->faker->randomElement(['new', 'in_progress', 'pending', 'completed']),
-            'created_by' => Employee::inRandomOrder()->first()?->id ?? Employee::factory(),
+           // 'employee_id' => $employeeId,
+            'created_by' => $employeeId,
+            'created_at' => $this->faker->dateTimeBetween('2025-06-15', '2025-07-15'),
+            'updated_at' => now(),
         ];
     }
 }
