@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CacheWorksReportController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\StudentCourseController;
 
@@ -26,6 +27,11 @@ Route::middleware('setlocale')->group(function () {
 Route::post('registration', [UserController::class, 'registration']);
 Route::post('login', [UserController::class, 'login']);
 Route::post('logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
+
+
+Route::get('/generate-daily-report', [CacheWorksReportController::class, 'generateDailyReport']);
+//to show reports
+Route::get('/reports', [CacheWorksReportController::class, 'showReports']);
 
 
 Route::apiResource('users', UserController::class);
