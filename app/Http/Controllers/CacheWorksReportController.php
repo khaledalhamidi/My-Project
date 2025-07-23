@@ -9,21 +9,7 @@ use Illuminate\Support\Carbon;
 
 class CacheWorksReportController extends Controller
 {
-    //
-    // public function generateDailyReport(Request $request)
-    // {
-    //     $startDate = $request->query('start_date'); // ممكن تكون null
-    //     $endDate = $request->query('end_date');     // ممكن تكون null
-
-    //     GenerateDailyWorkReport::dispatch($startDate, $endDate);
-
-    //     return response()->json([
-    //         'message' => '✅ تم إرسال الجوب بنجاح',
-    //         'start_date' => $startDate,
-    //         'end_date' => $endDate,
-    //     ]);
-    // }
-    public function generateDailyReport(Request $request)
+        public function generateDailyReport(Request $request)
     {
         $startDate = $request->query('start_date'); // ممكن تكون null
         $endDate = $request->query('end_date');     // ممكن تكون null

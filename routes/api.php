@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CacheWorksReportController;
+use App\Http\Controllers\CouponReportController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\StudentCourseController;
 
@@ -21,6 +22,11 @@ Route::get('/user', function (Request $request) {
 Route::middleware('setlocale')->group(function () {
     Route::apiResource('works', WorkController::class);
 }) ;
+//Tamam Report Task
+
+Route::get('coupons', [CouponReportController::class, 'index']);
+
+
 
 
 // Login/Registration/Logout
@@ -38,6 +44,7 @@ Route::apiResource('users', UserController::class);
 Route::apiResource('employee', EmployeeController::class);
 Route::apiResource('departments', DepartmentController::class);
 // for updating employee task in employee table
+
 Route::put('/employee/{employee}/task/{task}/status', [EmployeeController::class, 'updateTaskStatus']);
 
 
