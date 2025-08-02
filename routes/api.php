@@ -7,6 +7,7 @@ use App\Http\Controllers\StudentCourseController;
 
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkController;
 use App\Models\Department;
@@ -48,4 +49,10 @@ Route::apiResource('departments', DepartmentController::class);
 Route::put('/employee/{employee}/task/{task}/status', [EmployeeController::class, 'updateTaskStatus']);
 
 
-
+// this route is for products
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('products', ProductController::class)->except(['destroy,index']);
+    Route::put('products/{product}/toggle-active', [ProductController::class, 'toggleActiveStatus']);
+    Route::put('products/{product}/add-stock', [ProductController::class, 'addStock']);
+    Route::put('products/{product}/consume-stock', [ProductController::class, 'consumeStock']);
+});
