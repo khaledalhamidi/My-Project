@@ -22,7 +22,7 @@ Route::get('/user', function (Request $request) {
 //middleware with workcontroller
 Route::middleware('setlocale')->group(function () {
     Route::apiResource('works', WorkController::class);
-}) ;
+});
 //Tamam Report Task
 
 Route::get('coupons', [CouponReportController::class, 'index']);
@@ -49,10 +49,18 @@ Route::apiResource('departments', DepartmentController::class);
 Route::put('/employee/{employee}/task/{task}/status', [EmployeeController::class, 'updateTaskStatus']);
 
 
-// this route is for products
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('products', ProductController::class)->except(['destroy,index']);
+    // CRUD except index
+    Route::apiResource('products', ProductController::class)->except(['destroy', 'index']);
+
+    // Toggle active status
     Route::put('products/{product}/toggle-active', [ProductController::class, 'toggleActiveStatus']);
-    Route::put('products/{product}/add-stock', [ProductController::class, 'addStock']);
-    Route::put('products/{product}/consume-stock', [ProductController::class, 'consumeStock']);
 });
+
+// Public or authenticated route for product list
+Route::get('products', [ProductController::class, 'index']);
+
+// Movement-related routes
+Route::post('products/{product}/movements/add', [ProductController::class, 'addMovement']);
+Route::post('products/{product}/movements/withdraw', [ProductController::class, 'withdrawMovement']);
+Route::get('products/{product}/movements', [ProductController::class, 'movementHistory']);

@@ -23,6 +23,6 @@ class AdminUserSeeder extends Seeder
         );
 
         $token = $user->createToken('admin-token')->plainTextToken;
-        $this->command->info("✅ Admin token: {$token}");
+        $this->command->info(" Admin token: {$token}");
     }
 }

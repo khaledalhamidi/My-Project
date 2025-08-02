@@ -16,4 +16,8 @@ class Product extends Model
     'current_quantity',
     'is_active',
 ];
+public function movements()
+{
+    return $this->hasMany(ProductMovement::class);
+}
 }

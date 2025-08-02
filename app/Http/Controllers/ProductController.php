@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductMovement;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -14,6 +15,7 @@ class ProductController extends Controller
         $products = Product::paginate($perPage);
         return response()->json($products);
     }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -52,21 +54,34 @@ class ProductController extends Controller
         return response()->json($product, 200);
     }
 
-    public function addStock(Request $request, Product $product)
+    public function addMovement(Request $request, Product $product)
     {
         $request->validate([
             'quantity' => 'required|integer|min:1',
+            'note' => 'nullable|string',
         ]);
 
         $product->increment('current_quantity', $request->quantity);
 
-        return response()->json($product, 200);
+        $movement = ProductMovement::create([
+            'product_id' => $product->id,
+            'type' => 'add',
+            'quantity' => $request->quantity,
+            'note' => $request->note,
+        ]);
+
+        return response()->json([
+            'message' => 'تم اضافة الكمية بنجاح.',
+            'product' => $product,
+            'movement' => $movement,
+        ]);
     }
 
-    public function consumeStock(Request $request, Product $product)
+    public function withdrawMovement(Request $request, Product $product)
     {
         $request->validate([
             'quantity' => 'required|integer|min:1',
+            'note' => 'nullable|string',
         ]);
 
         if ($product->current_quantity < $request->quantity) {
@@ -75,6 +90,24 @@ class ProductController extends Controller
 
         $product->decrement('current_quantity', $request->quantity);
 
-        return response()->json($product, 200);
+        $movement = ProductMovement::create([
+            'product_id' => $product->id,
+            'type' => 'withdraw',
+            'quantity' => $request->quantity,
+            'note' => $request->note,
+        ]);
+
+        return response()->json([
+            'message' => 'تم سحب الكمية بنجاح.',
+            'product' => $product,
+            'movement' => $movement,
+        ]);
+    }
+
+    public function movementHistory(Product $product)
+    {
+        $movements = $product->movements()->latest()->get();
+
+        return response()->json($movements);
     }
 }
