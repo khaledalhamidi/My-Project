@@ -20,9 +20,9 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'product_code' => 'nullable|string|max:255',
-            'location' => 'required|string|max:255',
-            'current_quantity' => 'required|integer',
+            'sku' => 'nullable|string|max:255',
+            'mpn' => 'required|string|max:255',
+            'quantity' => 'required|integer',
             'is_active' => 'required|boolean',
         ]);
 
@@ -35,9 +35,9 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'product_code' => 'nullable|string|max:255',
-            'location' => 'required|string|max:255',
-            'current_quantity' => 'required|integer',
+            'sku' => 'nullable|string|max:255',
+            'mpn' => 'required|string|max:255',
+            'quantity' => 'required|integer',
             'is_active' => 'required|boolean',
         ]);
 

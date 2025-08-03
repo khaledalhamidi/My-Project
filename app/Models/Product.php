@@ -11,9 +11,9 @@ class Product extends Model
     use HasFactory;
     protected $fillable = [
     'name',
-    'product_code',
-    'location',
-    'current_quantity',
+    'sku',
+    'mpn',
+    'quantity',
     'is_active',
 ];
 public function movements()
