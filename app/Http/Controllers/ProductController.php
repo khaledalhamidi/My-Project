@@ -85,7 +85,7 @@ class ProductController extends Controller
         ]);
 
         if ($product->current_quantity < $request->quantity) {
-            return response()->json(['error' => 'Insufficient stock.'], 400);
+            return response()->json(['MSG' => 'Insufficient stock.'], 400);
         }
 
         $product->decrement('current_quantity', $request->quantity);
