@@ -61,7 +61,7 @@ class ProductController extends Controller
             'note' => 'nullable|string',
         ]);
 
-        $product->increment('current_quantity', $request->quantity);
+        $product->increment('quantity', $request->quantity);
 
         $movement = ProductMovement::create([
             'product_id' => $product->id,
@@ -84,11 +84,11 @@ class ProductController extends Controller
             'note' => 'nullable|string',
         ]);
 
-        if ($product->current_quantity < $request->quantity) {
+        if ($product->quantity < $request->quantity) {
             return response()->json(['MSG' => 'Insufficient stock.'], 400);
         }
 
-        $product->decrement('current_quantity', $request->quantity);
+        $product->decrement('quantity', $request->quantity);
 
         $movement = ProductMovement::create([
             'product_id' => $product->id,

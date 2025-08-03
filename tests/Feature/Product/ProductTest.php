@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -36,3 +37,28 @@ it('can insert a product successfully into database ', function () {
     ]);
 });
 
+
+
+// Test for adding a product quantity
+uses(RefreshDatabase::class);
+
+it('adds quantity to a product successfully', function () {
+    $user = User::factory()->create();
+    $product = Product::factory()->create([
+        'quantity' => 10,
+    ]);
+
+    $response = $this->actingAs($user, 'sanctum')
+        ->postJson("/api/products/{$product->id}/movements/add", [
+            'quantity' => 5,
+        ]);
+
+    $response->assertStatus(200)
+        ->assertJsonFragment(['message' => 'تم اضافة الكمية بنجاح.']);
+
+    // تحقق من تحديث الكمية
+    $this->assertDatabaseHas('products', [
+        'id' => $product->id,
+        'quantity' => 15,
+    ]);
+});

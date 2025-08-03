@@ -19,11 +19,11 @@ class ProductFactory extends Factory
     {
         return [
             'name'              => $this->faker->words(2, true),
-            'product_code' => $this->faker
+            'sku' => $this->faker
                 ->optional(0.7, null)   // 70% chance to run bothify(), else null
                 ->bothify('P-###?'),
-            'location'          => $this->faker->randomElement(['Shelf A', 'Room 2', 'Warehouse X']),
-            'current_quantity'  => $this->faker->numberBetween(0, 500),
+            'mpn'          => $this->faker->randomElement(['Shelf A', 'Room 2', 'Warehouse X']),
+            'quantity'  => $this->faker->numberBetween(0, 500),
             'is_active'         => $this->faker->boolean(85),
         ];
     }
