@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ProductCreated;
 use App\Models\Product;
 use App\Models\ProductMovement;
 use Auth;
@@ -17,6 +18,20 @@ class ProductController extends Controller
         return response()->json($products);
     }
 
+    // public function store(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'name' => 'required|string|max:255',
+    //         'sku' => 'nullable|string|max:255',
+    //         'mpn' => 'required|string|max:255',
+    //         'quantity' => 'required|integer',
+    //         'is_active' => 'required|boolean',
+    //     ]);
+
+    //     $product = Product::create($validated);
+
+    //     return response()->json($product, 201);
+    // }
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -29,6 +44,9 @@ class ProductController extends Controller
 
         $product = Product::create($validated);
 
+        // Fire the broadcast event:
+        // broadcast(new ProductCreated($product))->toOthers();
+        event(new \App\Events\ProductCreated($product));
         return response()->json($product, 201);
     }
 
