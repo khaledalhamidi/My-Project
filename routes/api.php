@@ -8,6 +8,7 @@ use App\Http\Controllers\StudentCourseController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkController;
 use App\Models\Department;
@@ -49,18 +50,37 @@ Route::apiResource('departments', DepartmentController::class);
 Route::put('/employee/{employee}/task/{task}/status', [EmployeeController::class, 'updateTaskStatus']);
 
 
-Route::middleware('auth:sanctum')->group(function () {
-    // CRUD except index
-    Route::apiResource('products', ProductController::class)->except(['destroy', 'index']);
+// Route::middleware('auth:sanctum')->group(function () {
+//     // CRUD except index
+//     Route::apiResource('products', ProductController::class)->except(['destroy', 'index']);
 
-    // Toggle active status
-    Route::put('products/{product}/toggle-active', [ProductController::class, 'toggleActiveStatus']);
-});
+//     // Toggle active status
+//     Route::put('products/{product}/toggle-active', [ProductController::class, 'toggleActiveStatus']);
 
-// Public or authenticated route for product list
+
+// // Public or authenticated route for product list
+// Route::get('products', [ProductController::class, 'index']);
+
+// // Movement-related routes
+// Route::post('products/{product}/movements/add', [ProductController::class, 'addMovement']);
+// Route::post('products/{product}/movements/withdraw', [ProductController::class, 'withdrawMovement']);
+// Route::get('products/{product}/movements', [ProductController::class, 'movementHistory']);
+
+// // Product movements report
+// Route::get('reports', [ProductReportController::class, 'productMovements'])
+//     ->name('reports');
+// }
+// );
 Route::get('products', [ProductController::class, 'index']);
 
-// Movement-related routes
-Route::post('products/{product}/movements/add', [ProductController::class, 'addMovement']);
-Route::post('products/{product}/movements/withdraw', [ProductController::class, 'withdrawMovement']);
-Route::get('products/{product}/movements', [ProductController::class, 'movementHistory']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::put('products/{product}/toggle-active', [ProductController::class, 'toggleActiveStatus']);
+    Route::post('products/{product}/movements/add', [ProductController::class, 'addMovement']);
+    Route::post('products/{product}/movements/withdraw', [ProductController::class, 'withdrawMovement']);
+    Route::get('products/{product}/movements', [ProductController::class, 'movementHistory']);
+
+    Route::apiResource('products', ProductController::class)
+        ->only(['store', 'update']);
+    Route::get('reports', [ProductReportController::class, 'productMovements'])
+        ->name('reports.product-movements');
+});

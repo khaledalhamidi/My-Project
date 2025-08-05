@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\ProductMovement;
+use Auth;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -54,55 +55,107 @@ class ProductController extends Controller
         return response()->json($product, 200);
     }
 
+    // public function addMovement(Request $request, Product $product)
+    // {
+    //     $request->validate([
+    //         'quantity' => 'required|integer|min:1',
+    //         'note' => 'nullable|string',
+    //     ]);
+
+    //     $product->increment('quantity', $request->quantity);
+
+    //     $movement = ProductMovement::create([
+    //         'product_id' => $product->id,
+    //         'type' => 'add',
+    //         'quantity' => $request->quantity,
+    //         'note' => $request->note,
+    //     ]);
+
+    //     return response()->json([
+    //         'message' => 'تم اضافة الكمية بنجاح.',
+    //         'product' => $product,
+    //         'movement' => $movement,
+    //     ]);
+    // }
+
+    // public function withdrawMovement(Request $request, Product $product)
+    // {
+    //     $request->validate([
+    //         'quantity' => 'required|integer|min:1',
+    //         'note' => 'nullable|string',
+    //     ]);
+
+    //     if ($product->quantity < $request->quantity) {
+    //         return response()->json(['MSG' => 'Insufficient stock.'], 400);
+    //     }
+
+    //     $product->decrement('quantity', $request->quantity);
+
+    //     $movement = ProductMovement::create([
+    //         'product_id' => $product->id,
+    //         'type' => 'withdraw',
+    //         'quantity' => $request->quantity,
+    //         'note' => $request->note,
+    //     ]);
+
+    //     return response()->json([
+    //         'message' => 'تم سحب الكمية بنجاح.',
+    //         'product' => $product,
+    //         'movement' => $movement,
+    //     ]);
+    // }
     public function addMovement(Request $request, Product $product)
     {
-        $request->validate([
+        $validated = $request->validate([
             'quantity' => 'required|integer|min:1',
-            'note' => 'nullable|string',
+            'note'     => 'nullable|string',
         ]);
 
-        $product->increment('quantity', $request->quantity);
+        $product->increment('quantity', $validated['quantity']);
 
         $movement = ProductMovement::create([
             'product_id' => $product->id,
-            'type' => 'add',
-            'quantity' => $request->quantity,
-            'note' => $request->note,
+            'user_id'    => Auth::id(),
+            'type'       => 'add',
+            'quantity'   => $validated['quantity'],
+            'note'       => $validated['note'] ?? null,
         ]);
 
         return response()->json([
-            'message' => 'تم اضافة الكمية بنجاح.',
-            'product' => $product,
-            'movement' => $movement,
+            'message'  => 'تم اضافة الكمية بنجاح.',
+            'product'  => $product->fresh(),
+            'movement' => $movement->load('user:id,name'),
         ]);
     }
 
     public function withdrawMovement(Request $request, Product $product)
     {
-        $request->validate([
+        $validated = $request->validate([
             'quantity' => 'required|integer|min:1',
-            'note' => 'nullable|string',
+            'note'     => 'nullable|string',
         ]);
 
-        if ($product->quantity < $request->quantity) {
-            return response()->json(['MSG' => 'Insufficient stock.'], 400);
+        if ($product->quantity < $validated['quantity']) {
+            return response()->json(['message' => 'Insufficient stock.'], 400);
         }
 
-        $product->decrement('quantity', $request->quantity);
+        $product->decrement('quantity', $validated['quantity']);
 
         $movement = ProductMovement::create([
             'product_id' => $product->id,
-            'type' => 'withdraw',
-            'quantity' => $request->quantity,
-            'note' => $request->note,
+            'user_id'    => Auth::id(),
+            'type'       => 'withdraw',
+            'quantity'   => $validated['quantity'],
+            'note'       => $validated['note'] ?? null,
         ]);
 
         return response()->json([
-            'message' => 'تم سحب الكمية بنجاح.',
-            'product' => $product,
-            'movement' => $movement,
+            'message'  => 'تم سحب الكمية بنجاح.',
+            'product'  => $product->fresh(),
+            'movement' => $movement->load('user:id,name'),
         ]);
     }
+
 
     public function movementHistory(Product $product)
     {

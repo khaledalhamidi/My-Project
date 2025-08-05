@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
             //WorkSeeder::class,
             //  DepartmentSeeder::class,
             //  DepartmentWorkSeeder::class,
-            AdminUserSeeder::class,
-           // ProductSeeder::class,
+          AdminUserSeeder::class, //seeding admin user
+            ProductSeeder::class,
 
         ]);
     }
