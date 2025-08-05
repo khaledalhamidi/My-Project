@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductMovement;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
 
 class ProductReportController extends Controller
@@ -57,8 +58,13 @@ class ProductReportController extends Controller
 
         $perPage = $request->query('per_page', 25);
         $movements = $q->paginate((int)$perPage);
-
+        return JsonResource::collection($movements)
+            ->additional([
+                'stats' => $stats,
+            ]);
+        // return response()->json([
         return response()->json([
+
             'stats' => $stats,
             'data' => $movements
         ]);
